@@ -4,10 +4,14 @@ using UnityEngine;
 
 [RequireComponent (typeof(CharacterController))]
 public class PlayerController : MonoBehaviour {
-    float speed = 15.0f;
+	Player grubby = new Player ();
+	CharacterController character;
+	public GameObject bombPrefab;
+
 	float walkSpeed = 15.0f;
     float sprintSpeed = 30.0f;
-	float jumpSpeed = 5.0f;
+	float impulse = 20f;
+
     
     float horizontalSensitivity = 5.0f;
     float verticalSensitivity = 5.0f;
@@ -15,9 +19,7 @@ public class PlayerController : MonoBehaviour {
     float pitch = 0.0f;
 
 	float verticalVelocity = 0.0f;
-
-	CharacterController character;
-    
+	    
 	// Use this for initialization
 	void Start () {
 		character = GetComponent<CharacterController>();
@@ -28,24 +30,15 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 		rotate ();
 		move ();
-
-		if (Input.GetButtonDown("Jump") && character.isGrounded) {
-			jump();
-		}
-
-		if (character.isGrounded) {
-			if (Input.GetKey ("left shift")) {
-				speed = sprintSpeed;
-			}
-			else
-				speed = walkSpeed;
-		}
+		sprint ();
+		jump ();
+		shoot ();
+		throwBomb ();
 	}
 
-	// Movement of player
 	void move() {
-		float deltaX = Input.GetAxis("Horizontal") * speed;
-		float deltaZ = Input.GetAxis("Vertical") * speed;
+		float deltaX = Input.GetAxis("Horizontal") * grubby.speed;
+		float deltaZ = Input.GetAxis("Vertical") * grubby.speed;
 
 		if(!character.isGrounded)
 			verticalVelocity += Physics.gravity.y * Time.deltaTime;
@@ -56,7 +49,6 @@ public class PlayerController : MonoBehaviour {
 		character.Move(direction * Time.deltaTime);
 	}
 
-	// Yaw of player and pitch of camera
 	void rotate() {
 		float yaw = Input.GetAxis("Mouse X") * horizontalSensitivity;
 		transform.Rotate(0, yaw, 0);
@@ -67,7 +59,36 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void jump() {
-		verticalVelocity = jumpSpeed;
+		if (Input.GetButtonDown("Jump") && character.isGrounded) {
+			verticalVelocity = grubby.jumpHeight;
+		}
+	}
+
+	void throwBomb() {
+		// Hold the bomb
+		if (Input.GetKeyDown("e")) {
+			
+		}
+
+		// Release the bomb
+		if (Input.GetKeyUp("e")) {
+			GameObject bomb = (GameObject) Instantiate (bombPrefab, Camera.main.transform.position, Camera.main.transform.rotation);
+			bomb.GetComponent<Rigidbody> ().AddForce (Camera.main.transform.forward * impulse, ForceMode.Impulse);
+		}
+	}
+
+	void sprint() {
+		if (character.isGrounded) {
+			if (Input.GetKey ("left shift")) {
+				grubby.speed = sprintSpeed;
+			}
+			else
+				grubby.speed = walkSpeed;
+		}
+	}
+
+	void shoot() {
+
 	}
 }
 
