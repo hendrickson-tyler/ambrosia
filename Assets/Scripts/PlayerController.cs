@@ -4,13 +4,22 @@ using UnityEngine;
 
 [RequireComponent (typeof(CharacterController))]
 public class PlayerController : MonoBehaviour {
-	Player grubby = new Player ();
+	public Player grubby = new Player ();
 	CharacterController character;
 	public GameObject bombPrefab;
 
-	float walkSpeed = 15.0f;
-    float sprintSpeed = 30.0f;
-	float impulse = 20f;
+	MainWeapon blenderBlaster = new MainWeapon();
+	public GameObject bulletPrefab;
+	public GameObject nozzle;
+
+	float walkSpeed = 5.0f;
+    float sprintSpeed = 10.0f;
+	float impulse = 10f;
+
+	float forwardSpeed;
+	float sideSpeed;
+
+	bool bombThrown = false;
 
     
     float horizontalSensitivity = 5.0f;
@@ -23,7 +32,6 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		character = GetComponent<CharacterController>();
-        //Screen.lockCursor = true; //move to game manager
 	}
 
 	// Update is called once per frame
@@ -37,13 +45,13 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void move() {
-		float deltaX = Input.GetAxis("Horizontal") * grubby.speed;
-		float deltaZ = Input.GetAxis("Vertical") * grubby.speed;
+		sideSpeed = Input.GetAxis("Horizontal") * grubby.speed;
+		forwardSpeed = Input.GetAxis("Vertical") * grubby.speed;
 
 		if(!character.isGrounded)
 			verticalVelocity += Physics.gravity.y * Time.deltaTime;
 
-		Vector3 direction = new Vector3(deltaX, verticalVelocity, deltaZ);
+		Vector3 direction = new Vector3(sideSpeed, verticalVelocity, forwardSpeed);
 
 		direction = transform.TransformDirection(direction);
 		character.Move(direction * Time.deltaTime);
@@ -73,13 +81,13 @@ public class PlayerController : MonoBehaviour {
 		// Release the bomb
 		if (Input.GetKeyUp("e")) {
 			GameObject bomb = (GameObject) Instantiate (bombPrefab, Camera.main.transform.position, Camera.main.transform.rotation);
-			bomb.GetComponent<Rigidbody> ().AddForce (Camera.main.transform.forward * impulse, ForceMode.Impulse);
+			bomb.GetComponent<Rigidbody> ().AddForce (Camera.main.transform.forward * (impulse + forwardSpeed), ForceMode.Impulse);
 		}
 	}
 
 	void sprint() {
 		if (character.isGrounded) {
-			if (Input.GetKey ("left shift")) {
+			if (Input.GetKey ("left shift") && !Input.GetButton ("Fire1")) {
 				grubby.speed = sprintSpeed;
 			}
 			else
@@ -88,7 +96,10 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void shoot() {
-
+		if (Input.GetButton ("Fire1")) {
+			GameObject bullet = (GameObject)Instantiate (bulletPrefab, nozzle.transform.position, nozzle.transform.rotation);
+			bullet.GetComponent<Rigidbody> ().AddForce (nozzle.transform.forward * (impulse + forwardSpeed), ForceMode.Impulse);
+		}
 	}
 }
 

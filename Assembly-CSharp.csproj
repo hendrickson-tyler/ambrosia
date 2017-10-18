@@ -51,18 +51,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Bullet.cs" />
+     <Compile Include="Assets\Scripts\Collectable.cs" />
      <Compile Include="Assets\Scripts\Enemy.cs" />
      <Compile Include="Assets\Scripts\EnemyController.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\MainWeapon.cs" />
      <Compile Include="Assets\Scripts\MainWeaponController.cs" />
-     <Compile Include="Assets\Scripts\Old\AutoRotate.cs" />
-     <Compile Include="Assets\Scripts\Old\Collect.cs" />
-     <Compile Include="Assets\Scripts\Old\FirstPersonInput.cs" />
-     <Compile Include="Assets\Scripts\Old\MouseLooks.cs" />
      <Compile Include="Assets\Scripts\Old\Timer.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
+     <Compile Include="Assets\Scripts\Spacecraft.cs" />
      <Compile Include="Assets\Scripts\SubWeapon.cs" />
      <Compile Include="Assets\Scripts\SubWeaponController.cs" />
      <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAlpha.shader" />

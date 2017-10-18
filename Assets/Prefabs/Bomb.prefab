@@ -55,7 +55,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1373909712971892}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.021836, y: 0.1089, z: 7.837609}
+  m_LocalPosition: {x: 4.8275595, y: 1.12, z: 10.824926}
   m_LocalScale: {x: 0.19842342, y: 0.19842342, z: 0.19842342}
   m_Children:
   - {fileID: 4947983398911204}
@@ -89,7 +89,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8a7c48a546a804f598f9363353c588f6, type: 2}
+  - {fileID: 2100000, guid: 0208c0aa82f6f4092bad7c80b4486b6d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -140,8 +140,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0.9859426, g: 0, b: 0.060314015, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 0.98603964, g: 0, b: 0.02709889, a: 1}
+  m_Intensity: 5
   m_Range: 1
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -162,7 +162,7 @@ Light:
     m_Bits: 4294967295
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
