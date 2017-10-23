@@ -11,16 +11,16 @@ public class PlayerController : MonoBehaviour {
 	MainWeapon blenderBlaster = new MainWeapon();
 	public GameObject bulletPrefab;
 	public GameObject nozzle;
+	Camera deathCam = new Camera();
 
 	float walkSpeed = 5.0f;
     float sprintSpeed = 10.0f;
-	float impulse = 10f;
+	float impulse = 15f;
 
 	float forwardSpeed;
 	float sideSpeed;
 
 	bool bombThrown = false;
-
     
     float horizontalSensitivity = 5.0f;
     float verticalSensitivity = 5.0f;
@@ -42,6 +42,18 @@ public class PlayerController : MonoBehaviour {
 		jump ();
 		shoot ();
 		throwBomb ();
+
+		// check health
+		if (grubby.health <= 0) {
+			grubby.health = 0;
+			Destroy (gameObject);
+		}
+
+		grubby.regenDelay -= Time.deltaTime;
+
+		if (grubby.regenDelay <= 0) {
+			grubby.regenHealth (Time.deltaTime);
+		}
 	}
 
 	void move() {

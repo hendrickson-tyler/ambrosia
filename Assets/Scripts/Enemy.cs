@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Enemy {
 	public float health = 100;
-	public float attackStrength;
-	public float attackSpeed;
-	public float movementSpeed;
+	public int attackStrength = 20;
+	public float attackDelay = 0;
+	public bool attacking = false;
+
+	public void takeDamage(int damage) {
+		health -= damage;
+	}
 }

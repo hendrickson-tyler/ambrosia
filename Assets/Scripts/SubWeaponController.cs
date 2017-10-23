@@ -5,6 +5,7 @@ using UnityEngine;
 public class SubWeaponController : MonoBehaviour {
 	SubWeapon omNomBomb = new SubWeapon();
 	public GameObject explosiveEffect;
+	int bombDamage = 60;
 
 	// Use this for initialization
 	void Start () {
@@ -21,20 +22,23 @@ public class SubWeaponController : MonoBehaviour {
 	}
 
 	void Explode() {
-		omNomBomb.detonated = true;
-
 		// explosion effect
-		Destroy(Instantiate(explosiveEffect, gameObject.transform.position, gameObject.transform.rotation), 4.0f);
+		Destroy(Instantiate(explosiveEffect, gameObject.transform.position, gameObject.transform.rotation), 1.0f);
 
-		// hurt enemies
+		Vector3 explosionPosition = transform.position;
+		float explosionRadius = 2.0f;
+		Collider[] colliders = Physics.OverlapSphere (explosionPosition, explosionRadius);
+		int counter = 0;
 
-		// get rid of the object
-		Destroy (gameObject);
-	}
-
-	void OnTriggerEnter(Collider other) {
-		if (other.gameObject.tag == "Enemy" && omNomBomb.detonated == true) {
-			Destroy (other.gameObject);
+		foreach (Collider col in colliders) {
+			if (col.tag == "Enemy") {
+				
+				col.GetComponent<EnemyController> ().tasteless.takeDamage (bombDamage);
+				counter++;
+				Debug.Log (counter);
+			}
 		}
+
+		Destroy (gameObject);
 	}
 }
