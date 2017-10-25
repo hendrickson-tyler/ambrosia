@@ -4,21 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
-	public Camera deathCam;
-	public Text counter;
-	public Text collectedRequired;
+	public Game game = new Game(difficultyLevel.easy);
+
+	// UI
+	public Text timer;
+	public Text partsCollected;
 	public Text health;
 	public GameObject winLose;
 	public GameObject winLoseDescription;
-	public GameObject enemyPrefab;
-	bool gameWon = false;
-
-	public int partsReturned = 0;
-	int partsRequired = 3;
-	int seconds = 60;
-	float enemySpawnDelay = 8.0f;
 
 	GameObject[] spawnLocations;
+	GameObject player;
+	public GameObject enemyPrefab;
+	public Camera deathCam;
 
 	// Use this for initialization
 	void Awake () {
@@ -27,40 +25,26 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		countTime ();
-		collectedRequired.text = partsReturned + " / " + partsRequired;
-
-		//update health
-		health.text = GameObject.Find("Player").GetComponent<PlayerController>().grubby.health.ToString();
-
-		if (GameObject.Find ("Player").GetComponent<PlayerController> ().grubby.health <= 0) {
-			//dies
-			seconds = 0;
-			winLose.GetComponent<Text> ().text = "OUCH!";
-			winLose.SetActive (true);
-			winLoseDescription.GetComponent<Text> ().text = "You got chomped!";
-			winLoseDescription.SetActive (true);
-			deathCam.gameObject.SetActive (true);
-			for (int i = 0; i < 3; i++)
-				Destroy (spawnLocations [i]);
-		}
-
+		updateTime ();
+		updateHealth ();
+		partsCollected.text = game.partsReturned + " / " + game.partsRequired;
 	}
 
 	void InitGame() {
 		Cursor.visible = false;
 		Cursor.lockState = CursorLockMode.Locked;
 		spawnLocations = GameObject.FindGameObjectsWithTag ("EnemySpawn");
+		player = GameObject.FindGameObjectWithTag ("Player");
 	}		
 
-	void countTime() {
-		counter.text = Mathf.Clamp(seconds - (int)Time.timeSinceLevelLoad, 0, seconds).ToString();
-		enemySpawnDelay -= Time.deltaTime;
+	void updateTime() {
+		timer.text = Mathf.Clamp(game.timeRemaining - (int)Time.timeSinceLevelLoad, 0, game.timeRemaining).ToString();
+		game.enemySpawnDelay -= Time.deltaTime;
 
-		if (counter.text == "0") {
-			counter.text = "TIME UP";
+		if (timer.text == "0") {
+			timer.text = "TIME UP";
 
-			if (partsReturned >= partsRequired) {
+			if (game.partsReturned >= game.partsRequired) {
 				winLose.SetActive (true);
 				for (int i = 0; i < 3; i++)
 					Destroy (spawnLocations [i]);
@@ -73,18 +57,38 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		if (enemySpawnDelay <= 0) {
+		if (game.enemySpawnDelay <= 0) {
 			spawnEnemies ();
 		}
 	}
 
 	void spawnEnemies() {
-		for (int i = 0; i < 3; i++) {
-			int rand = Random.Range (0, 3);
-			Instantiate (enemyPrefab, spawnLocations [rand].transform.position, spawnLocations [rand].transform.rotation);
+		if (spawnLocations[0] != null) {
+			for (int i = 0; i < 3; i++) {
+				int rand = Random.Range (0, 3);
+				Instantiate (enemyPrefab, spawnLocations [rand].transform.position, spawnLocations [rand].transform.rotation);
+			}
+			game.enemySpawnDelay = 8.0f; //for maximum fun, turn this off
 		}
+	}
 
-		enemySpawnDelay = 8.0f; //for maximum fun, turn this off
+	void updateHealth() {
+		//update health
+		if (player != null) {
+			health.text = player.GetComponent<PlayerController> ().grubby.health.ToString ();
+
+			if (player.GetComponent<PlayerController> ().grubby.health <= 0) {
+				//dies
+				game.timeRemaining = 0;
+				winLose.GetComponent<Text> ().text = "OUCH!";
+				winLose.SetActive (true);
+				winLoseDescription.GetComponent<Text> ().text = "You got chomped!";
+				winLoseDescription.SetActive (true);
+				deathCam.gameObject.SetActive (true);
+				for (int i = 0; i < 3; i++)
+					Destroy (spawnLocations [i]);
+			}
+		}
 	}
 }
 	

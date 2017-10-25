@@ -8,7 +8,6 @@ public class EnemyController : MonoBehaviour {
 
 	GameObject player;
 	GameObject ship;
-	GameObject attackTarget;
 	NavMeshAgent nav;
 
 	Transform destination;
@@ -36,22 +35,22 @@ public class EnemyController : MonoBehaviour {
 
 	void OnTriggerStay(Collider other) {
 		if (other.tag == "Player" && tasteless.attackDelay <= 0) {
-			attackTarget = other.gameObject;
 			other.gameObject.GetComponent<PlayerController> ().grubby.takeDamage (tasteless.attackStrength);
 			tasteless.attackDelay = 1.5f;
-
-			Debug.Log ("Player health: " + other.gameObject.GetComponent<PlayerController> ().grubby.health);
+			nav.SetDestination (gameObject.transform.position);
 		}
-		Debug.Log ("WITHIN RANGE!");
+		//Debug.Log ("WITHIN RANGE!");
 	}
 
 	void determineDestination() {
-		float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-		float distanceToShip = Vector3.Distance(transform.position, ship.transform.position);
+		if (player != null && ship != null) {
+			float distanceToPlayer = Vector3.Distance (transform.position, player.transform.position);
+			float distanceToShip = Vector3.Distance (transform.position, ship.transform.position);
 
-		if (distanceToPlayer <= distanceToShip)
-			nav.SetDestination (player.transform.position);
-		else
-			nav.SetDestination (ship.transform.position);
+			if (distanceToPlayer <= distanceToShip)
+				nav.SetDestination (player.transform.position);
+			else
+				nav.SetDestination (ship.transform.position);
+		}
 	}
 }

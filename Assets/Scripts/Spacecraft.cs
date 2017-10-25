@@ -21,7 +21,7 @@ public class Spacecraft : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Player") {
 			if (other.gameObject.GetComponent<PlayerController> ().grubby.partHeld == true) {
-				GameObject.Find ("GameManager").GetComponent<GameManager> ().partsReturned += 1;
+				GameObject.Find ("GameManager").GetComponent<GameManager> ().game.returnPart ();
 				other.gameObject.GetComponent<PlayerController> ().grubby.partHeld = false;
 				icon.SetActive (false);
 			}

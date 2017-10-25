@@ -4,23 +4,20 @@ using UnityEngine;
 
 [RequireComponent (typeof(CharacterController))]
 public class PlayerController : MonoBehaviour {
-	public Player grubby = new Player ();
-	CharacterController character;
-	public GameObject bombPrefab;
+	public Player grubby = new Player (ammoType.lemonade, bombType.chili);
 
-	MainWeapon blenderBlaster = new MainWeapon();
+	CharacterController character;
+
+	public GameObject bombPrefab;
 	public GameObject bulletPrefab;
 	public GameObject nozzle;
-	Camera deathCam = new Camera();
+
 
 	float walkSpeed = 5.0f;
     float sprintSpeed = 10.0f;
-	float impulse = 15f;
 
 	float forwardSpeed;
 	float sideSpeed;
-
-	bool bombThrown = false;
     
     float horizontalSensitivity = 5.0f;
     float verticalSensitivity = 5.0f;
@@ -86,14 +83,23 @@ public class PlayerController : MonoBehaviour {
 
 	void throwBomb() {
 		// Hold the bomb
-		if (Input.GetKeyDown("e")) {
+		if (Input.GetKeyDown("e") && grubby.omNomBomb.thrown == false) {
 			
 		}
 
 		// Release the bomb
-		if (Input.GetKeyUp("e")) {
+		if (Input.GetKeyUp("e") && grubby.omNomBomb.thrown == false) {
 			GameObject bomb = (GameObject) Instantiate (bombPrefab, Camera.main.transform.position, Camera.main.transform.rotation);
-			bomb.GetComponent<Rigidbody> ().AddForce (Camera.main.transform.forward * (impulse + forwardSpeed), ForceMode.Impulse);
+			bomb.GetComponent<Rigidbody> ().AddForce (Camera.main.transform.forward * (grubby.omNomBomb.range + forwardSpeed), ForceMode.Impulse);
+			grubby.omNomBomb.thrown = true;
+		}
+
+		if (grubby.omNomBomb.thrown == true) {
+			grubby.omNomBomb.throwDelay -= Time.deltaTime;
+
+			if (grubby.omNomBomb.throwDelay <= 0) {
+				grubby.omNomBomb.resetBomb ();
+			}
 		}
 	}
 
@@ -110,7 +116,7 @@ public class PlayerController : MonoBehaviour {
 	void shoot() {
 		if (Input.GetButton ("Fire1")) {
 			GameObject bullet = (GameObject)Instantiate (bulletPrefab, nozzle.transform.position, nozzle.transform.rotation);
-			bullet.GetComponent<Rigidbody> ().AddForce (nozzle.transform.forward * (impulse + forwardSpeed), ForceMode.Impulse);
+			bullet.GetComponent<Rigidbody> ().AddForce (nozzle.transform.forward * (grubby.blenderBlaster.range + forwardSpeed), ForceMode.Impulse);
 		}
 	}
 }

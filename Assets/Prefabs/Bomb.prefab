@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 135910374008426236}
   - component: {fileID: 23938065496934556}
   - component: {fileID: 54527416425903006}
-  - component: {fileID: 114781080155962772}
+  - component: {fileID: 114030849476103850}
   m_Layer: 0
   m_Name: Bomb
   m_TagString: Untagged
@@ -54,7 +54,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1373909712971892}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 119.59848, y: 0.017741203, z: 128.80714}
+  m_LocalPosition: {x: 116.11384, y: 0, z: 149.99875}
   m_LocalScale: {x: 0.19842342, y: 0.19842342, z: 0.19842342}
   m_Children:
   - {fileID: 4947983398911204}
@@ -166,7 +166,7 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &114781080155962772
+--- !u!114 &114030849476103850
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
