@@ -4,14 +4,13 @@ using UnityEngine;
 
 [RequireComponent (typeof(CharacterController))]
 public class PlayerController : MonoBehaviour {
-	public Player grubby = new Player (ammoType.lemonade, bombType.chili);
+	public Player grubby = new Player (ammoType.smoothie, bombType.chili);
 
 	CharacterController character;
 
 	public GameObject bombPrefab;
 	public GameObject bulletPrefab;
 	public GameObject nozzle;
-
 
 	float walkSpeed = 5.0f;
     float sprintSpeed = 10.0f;
@@ -39,18 +38,8 @@ public class PlayerController : MonoBehaviour {
 		jump ();
 		shoot ();
 		throwBomb ();
-
-		// check health
-		if (grubby.health <= 0) {
-			grubby.health = 0;
-			Destroy (gameObject);
-		}
-
-		grubby.regenDelay -= Time.deltaTime;
-
-		if (grubby.regenDelay <= 0) {
-			grubby.regenHealth (Time.deltaTime);
-		}
+		regenerateHealth ();
+		checkForDeath ();
 	}
 
 	void move() {
@@ -114,9 +103,29 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void shoot() {
-		if (Input.GetButton ("Fire1")) {
+		if (Input.GetButton ("Fire1") && grubby.blenderBlaster.currentCharge > 0) {
 			GameObject bullet = (GameObject)Instantiate (bulletPrefab, nozzle.transform.position, nozzle.transform.rotation);
 			bullet.GetComponent<Rigidbody> ().AddForce (nozzle.transform.forward * (grubby.blenderBlaster.range + forwardSpeed), ForceMode.Impulse);
+			grubby.blenderBlaster.discharge (Time.deltaTime);
+			//Debug.Log ("CHARGE: " + grubby.blenderBlaster.currentCharge);
+		} else if (!Input.GetButton ("Fire1")) {
+			grubby.blenderBlaster.recharge (Time.deltaTime);
+			//Debug.Log ("Recharge: " + grubby.blenderBlaster.currentCharge);
+		}
+	}
+
+	void regenerateHealth() {
+		grubby.regenDelay -= Time.deltaTime;
+
+		if (grubby.regenDelay <= 0) {
+			grubby.regenHealth (Time.deltaTime);
+		}
+	}
+
+	void checkForDeath() {
+		if (grubby.health <= 0) {
+			grubby.health = 0;
+			Destroy (gameObject);
 		}
 	}
 }

@@ -16,17 +16,14 @@ public class EnemyController : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		player = GameObject.FindGameObjectWithTag ("Player");
-		ship = GameObject.Find ("Spacecraft");
+		ship = GameObject.Find ("Ship");
 		nav = GetComponent<NavMeshAgent> ();
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		determineDestination ();
 		tasteless.attackDelay -= Time.deltaTime;
-
-
 
 		if (tasteless.health <= 0) {
 			Destroy (gameObject);
@@ -37,9 +34,17 @@ public class EnemyController : MonoBehaviour {
 		if (other.tag == "Player" && tasteless.attackDelay <= 0) {
 			other.gameObject.GetComponent<PlayerController> ().grubby.takeDamage (tasteless.attackStrength);
 			tasteless.attackDelay = 1.5f;
-			nav.SetDestination (gameObject.transform.position);
+			tasteless.attacking = true;
+		} else if (other.name == "Ship" && tasteless.attackDelay <= 0) {
+			other.gameObject.GetComponent<ShipController> ().ship.takeDamage (tasteless.attackStrength);
+			tasteless.attackDelay = 1.5f;
+			tasteless.attacking = true;
 		}
 		//Debug.Log ("WITHIN RANGE!");
+	}
+
+	void OnTriggerExit(Collider other) {
+		tasteless.attacking = false;
 	}
 
 	void determineDestination() {
@@ -51,6 +56,13 @@ public class EnemyController : MonoBehaviour {
 				nav.SetDestination (player.transform.position);
 			else
 				nav.SetDestination (ship.transform.position);
-		}
+
+			if (tasteless.attacking == true) {
+				nav.SetDestination (gameObject.transform.position);
+			}
+		} else if (ship == null && player != null)
+			nav.SetDestination (player.transform.position);
+		else if (ship != null && player == null)
+			nav.SetDestination (ship.transform.position);
 	}
 }
