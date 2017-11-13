@@ -1,24 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-
 
 public class GameManager : MonoBehaviour {
 	public Game game = new Game(difficultyLevel.easy);
-
-	// UI
-	public Text timer;
-	public Text partsCollected;
-	public GameObject winLose;
-	public GameObject winLoseDescription;
-	public Image damageFrame;
+	public UIController UI = new UIController ();
 
 	GameObject[] spawnLocations;
 	GameObject player;
 	GameObject ship;
 	public GameObject enemyPrefab;
-	public Camera deathCam;
 
 	// Use this for initialization
 	void Awake () {
@@ -27,12 +18,12 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		updateDisplay ();
 		updateTime ();
 		checkForDeath ();
 	}
 
 	void InitGame() {
+		UI.initializeUI ();
 		Cursor.visible = false;
 		Cursor.lockState = CursorLockMode.Locked;
 		spawnLocations = GameObject.FindGameObjectsWithTag ("EnemySpawn");
@@ -40,46 +31,61 @@ public class GameManager : MonoBehaviour {
 		ship = GameObject.Find ("Ship");
 	}	
 
-	void updateDisplay() {
-		timer.text = Mathf.Clamp(game.timeRemaining - (int)Time.timeSinceLevelLoad, 0, game.timeRemaining).ToString();
-		partsCollected.text = game.partsReturned + " / " + game.partsRequired;
-		if (player != null) {
-			Color alpha = damageFrame.color;
-			alpha.a = Mathf.Abs(player.GetComponent<PlayerController> ().grubby.health - 100) / 100;
-			damageFrame.color = alpha;
-		}
-	}
-
 	void updateTime() {
-		game.enemySpawnDelay -= Time.deltaTime;
+		UI.updateTime (game.timeRemaining);
+		UI.countDown (Time.deltaTime);
 
-		if (game.enemySpawnDelay <= 0)
-			spawnEnemies ();
+		// between waves
+		if (game.betweenWaves) {
+			game.betweenWaveDelay -= Time.deltaTime;
+			UI.waveCountdownMessage (game.wave, game.betweenWaveDelay);
 
-		if (timer.text == "0") {
-			game.won = determineWinLose ();
-			destroySpawnLocations ();
+			if (game.betweenWaveDelay <= 0 && !game.won) {
+				UI.beginWave (game.wave);
+				game.betweenWaves = false;
+				game.resetTimeRemaining ();
+				game.partsReturned = 0;
+				UI.updatePartsReturned (game.partsReturned, game.partsRequired);
+			}
+		}
+
+		// active waves
+		else {
+			if (game.timeRemaining >= 0)
+				game.timeRemaining -= Time.deltaTime;
+			
+			game.enemySpawnDelay -= Time.deltaTime;
+
+			if (game.enemySpawnDelay <= 0)
+				spawnEnemies ();
+
+			if (game.timeRemaining <= 0) {
+				timeUp ();
+			}
 		}
 	}
 
-	bool determineWinLose() {
-		timer.text = "TIME UP";
+	void timeUp() {
+		if (game.partsReturned >= game.partsRequired && !game.betweenWaves) {
+			if (game.wave == 3) {
+				game.won = true;
+				UI.gameWonMessage ();
+			}
 
-		// win
-		if (game.partsReturned >= game.partsRequired) {
-			winLose.SetActive (true);
+			game.betweenWaves = true;
+			UI.waveCompleteMessage (game.wave);
+			game.advanceWave ();
+			game.betweenWaveDelay = 8.0f;
+
 			GameObject[] allEnemies = GameObject.FindGameObjectsWithTag ("Enemy");
 			foreach(GameObject enemy in allEnemies) {
 				Destroy (enemy);
 			}
-			return true;
 		} 
 
-		else {
-			winLose.GetComponent<Text> ().text = "BUMMER...";
-			winLose.SetActive (true);
-			winLoseDescription.SetActive (true);
-			return false;
+		else if (game.partsReturned <= game.partsRequired && !game.betweenWaves) {
+			UI.partsNotCollectedMessage ();
+			game.won = false;
 		}
 	}
 
@@ -94,21 +100,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void checkForDeath() {
-		//update health
 		if (player != null && player.GetComponent<PlayerController> ().grubby.health <= 0) {
-			game.timeRemaining = 0;
-			winLose.GetComponent<Text> ().text = "OUCH!";
-			winLose.SetActive (true);
-			winLoseDescription.GetComponent<Text> ().text = "You got chomped!";
-			winLoseDescription.SetActive (true);
-			deathCam.gameObject.SetActive (true);
+			UI.healthDeathMessage ();
 			destroySpawnLocations ();
 		} else if (ship != null && ship.GetComponent<ShipController> ().ship.health <= 0) {
 			game.timeRemaining = 0;
-			winLose.GetComponent<Text> ().text = "BOOM!";
-			winLose.SetActive (true);
-			winLoseDescription.GetComponent<Text> ().text = "Your only means of escape was destroyed!";
-			winLoseDescription.SetActive (true);
+			UI.shipDestroyedMessage ();
 			destroySpawnLocations ();
 		}
 	}
@@ -117,5 +114,7 @@ public class GameManager : MonoBehaviour {
 		foreach (GameObject spawnLocation in spawnLocations)
 			Destroy (spawnLocation);
 	}
+
+
 }
 	

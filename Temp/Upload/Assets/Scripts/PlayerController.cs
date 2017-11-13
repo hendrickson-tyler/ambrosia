@@ -119,6 +119,7 @@ public class PlayerController : MonoBehaviour {
 
 		if (grubby.regenDelay <= 0) {
 			grubby.regenHealth (Time.deltaTime);
+			GameObject.Find ("GameManager").GetComponent<GameManager> ().UI.updateDamageFrame (grubby.health);
 		}
 	}
 
@@ -131,6 +132,7 @@ public class PlayerController : MonoBehaviour {
 	public void die() {
 		grubby.health = 0;
 		Destroy (gameObject);
+		GameObject.Find ("GameManager").GetComponent<GameManager> ().game.won = false;
 	}
 }
 
