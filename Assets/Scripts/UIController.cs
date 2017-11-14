@@ -55,18 +55,17 @@ public class UIController {
 
 	public void healthDeathMessage() {
 		if (!freezeUI) {
-			deathCam.SetActive (true);
 			message.GetComponent<Text> ().text = "OUCH!";
 			message.SetActive (true);
 			messageDescription.GetComponent<Text> ().text = "You got chomped!";
 			messageDescription.SetActive (true);
 			freezeUI = true;
 		}
+		deathCam.SetActive (true);
 	}
 
 	public void fallingDeathMessage() {
 		if (!freezeUI) {
-			deathCam.SetActive (true);
 			message.GetComponent<Text> ().text = "WHOOPS!";
 			message.SetActive (true);
 			messageDescription.GetComponent<Text> ().text = "Somehow you fell to your death!";
@@ -78,6 +77,7 @@ public class UIController {
 
 			freezeUI = true;
 		}
+		deathCam.SetActive (true);
 	}
 
 	public void shipUnderAttackMessage() {

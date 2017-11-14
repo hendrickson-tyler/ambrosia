@@ -20,7 +20,7 @@ public class Game {
 	difficultyLevel difficulty;
 	public bool won;
 	public int wave = 1;
-	//int players = 1; //hard coded for now, never used
+	int players = 1; //hard coded for now
 	public int partsReturned = 0;
 	public int partsRequired;
 	public float timeRemaining;
@@ -38,19 +38,19 @@ public class Game {
 			partsRequired = 3;
 			timeRemaining = TIME_EASY;
 			enemySpawnDelay = SPAWN_DELAY_EASY;
-			enemySpawnAmount = SPAWN_AMOUNT_EASY;
+			enemySpawnAmount = SPAWN_AMOUNT_EASY * players;
 			break;
 		case difficultyLevel.medium:
 			partsRequired = 5;
 			timeRemaining = TIME_MEDIUM;
 			enemySpawnDelay = SPAWN_DELAY_MEDIUM;
-			enemySpawnAmount = SPAWN_AMOUNT_MEDIUM;
+			enemySpawnAmount = SPAWN_AMOUNT_MEDIUM * players;
 			break;
 		case difficultyLevel.hard:
 			partsRequired = 8;
 			timeRemaining = TIME_HARD;
 			enemySpawnDelay = SPAWN_DELAY_HARD;
-			enemySpawnAmount = SPAWN_AMOUNT_HARD;
+			enemySpawnAmount = SPAWN_AMOUNT_HARD * players;
 			break;
 		}
 	}

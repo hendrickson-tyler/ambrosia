@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bomb : MonoBehaviour {
 	public GameObject explosiveEffect;
 	GameObject player;
+	float explosionRadius = 3.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -27,7 +28,6 @@ public class Bomb : MonoBehaviour {
 		Destroy(Instantiate(explosiveEffect, gameObject.transform.position, gameObject.transform.rotation), 4.0f);
 
 		Vector3 explosionPosition = transform.position;
-		float explosionRadius = 2.0f;
 		Collider[] colliders = Physics.OverlapSphere (explosionPosition, explosionRadius);
 		int counter = 0;
 
