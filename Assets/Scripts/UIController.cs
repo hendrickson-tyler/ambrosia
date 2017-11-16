@@ -7,6 +7,8 @@ public class UIController {
 	const float SHIP_ATTACKED_TIMEOUT = 1.0f;
 
 	Image damageFrame;
+	Image rechargingBar;
+	GameObject omNombBombIcon;
 	Text waveCounter;
 	Text timer;
 	Text partsCollected;
@@ -21,6 +23,8 @@ public class UIController {
 
 	public void initializeUI () {
 		damageFrame = GameObject.Find ("DamageFrame").GetComponent<Image> ();
+		rechargingBar = GameObject.Find ("RechargeIcon").GetComponent<Image> ();
+		omNombBombIcon = GameObject.Find ("OmNomBombIcon");
 		waveCounter = GameObject.Find ("Wave").GetComponent<Text> ();
 		timer = GameObject.Find("Time").GetComponent<Text>();
 		partsCollected = GameObject.Find ("PartsCollected").GetComponent<Text> ();
@@ -35,6 +39,8 @@ public class UIController {
 		damageFrame.color = alpha;
 
 		//disable elements
+		rechargingBar.fillAmount = 0;
+		omNombBombIcon.SetActive (false);
 		message.SetActive(false);
 		messageDescription.SetActive(false);
 		subMessage.SetActive(false);
@@ -42,6 +48,7 @@ public class UIController {
 		deathCam.SetActive (false);
 	}
 
+	// essentially an update function
 	public void countDown(float time) {
 		if (shipAttackedDelay <= 10.0f)
 			shipAttackedDelay -= time;
@@ -50,6 +57,14 @@ public class UIController {
 			shipAttackedDelay = 20.0f;
 			clearSubMessage ();
 			subMessage.GetComponent<Text> ().color = Color.white;
+		}
+
+		if (GameObject.Find ("Player") != null && GameObject.Find ("Player").GetComponent<PlayerController> ().grubby.omNomBomb.throwDelay != 4.0f) {
+			omNombBombIcon.SetActive (true);
+			rechargingBar.fillAmount = GameObject.Find ("Player").GetComponent<PlayerController> ().grubby.omNomBomb.throwDelay / 4.0f;
+		} else {
+			omNombBombIcon.SetActive (false);
+			rechargingBar.fillAmount = 0.0f;
 		}
 	}
 

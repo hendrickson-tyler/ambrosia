@@ -9,7 +9,7 @@ public class Game {
 	const float TIME_MEDIUM = 120.0f;
 	const float TIME_HARD = 120.0f;
 
-	const float SPAWN_DELAY_EASY = 10.0f;
+	const float SPAWN_DELAY_EASY = 15.0f;
 	const float SPAWN_DELAY_MEDIUM = 8.0f;
 	const float SPAWN_DELAY_HARD = 4.0f;
 
@@ -35,7 +35,7 @@ public class Game {
 		// modify these
 		switch (difficulty) {
 		case difficultyLevel.easy:
-			partsRequired = 3;
+			partsRequired = 2;
 			timeRemaining = TIME_EASY;
 			enemySpawnDelay = SPAWN_DELAY_EASY;
 			enemySpawnAmount = SPAWN_AMOUNT_EASY * players;
