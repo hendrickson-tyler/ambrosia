@@ -113,8 +113,6 @@ public class GameManager : MonoBehaviour {
 
 	void spawnShipParts() {
 		if (shipPartSpawnLocations[0] != null) {
-			Debug.Log ("SPAWN");
-			Debug.Log (shipPartSpawnLocations.Length);
 			int rand = Random.Range (0, shipPartSpawnLocations.Length);
 			Instantiate (shipPartPrefab, shipPartSpawnLocations [rand].transform.position, shipPartSpawnLocations [rand].transform.rotation);
 			game.resetShipPartSpawnDelay ();
