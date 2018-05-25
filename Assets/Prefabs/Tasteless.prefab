@@ -1098,7 +1098,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1575263254768010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 108.380714, y: 5.0006104, z: 96.24399}
+  m_LocalPosition: {x: 49.97513, y: 5.014, z: 119.867386}
   m_LocalScale: {x: 0.22207648, y: 0.22207648, z: 0.22207648}
   m_Children:
   - {fileID: 4962668334177272}
@@ -1280,6 +1280,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114436601041239954
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1329,6 +1330,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 620f51a0f6eeb4c468b1bf5350772c2b, type: 2}
   m_StaticBatchInfo:
@@ -1413,6 +1415,6 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 4.55
-  m_BaseOffset: -1.03
+  m_BaseOffset: -0.52
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
