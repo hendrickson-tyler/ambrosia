@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UIController {
 	const float SHIP_ATTACKED_TIMEOUT = 1.0f;
 
+	GameObject HUD;
 	Image damageFrame;
 	Image ammoBar;
 	Image rechargingBar;
